@@ -7,101 +7,208 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Gestión de Taxis (series-temporales / taxis)</h1>
+    <h1>Gestión de Taxis</h1>
 
-    <hr>
+    <div class="main-container">
+        <!-- Botón para abrir el modal de crear -->
+        <div class="header-actions">
+            <button id="openCreateModalBtn" class="action-btn create-btn">
+                <span class="plus-icon">+</span> Crear Nuevo Taxi
+            </button>
+        </div>
 
-    <div class="operation-section create-section">
-        <h2>Crear Taxi</h2>
-        <form id="createForm">
-            <label for="createMatricula">Matrícula:</label>
-            <input type="text" id="createMatricula" name="Matricula" required>
+        <!-- Controles de paginación -->
+        <div id="paginationControls" class="pagination-controls">
+            <button id="prevPageBtn" disabled>Anterior</button>
+            <span id="pageInfo">Página 1 de 1</span>
+            <button id="nextPageBtn" disabled>Siguiente</button>
+            <span id="totalCountInfo">Total: 0</span>
+        </div>
 
-            <label for="createMarca">Marca:</label>
-            <input type="text" id="createMarca" name="Marca" required>
+        <!-- Tabla de taxis -->
+        <div id="taxiList" class="taxi-list">
+            <p>Cargando datos iniciales...</p>
+        </div>
 
-            <label for="createClase">Clase:</label>
-            <input type="text" id="createClase" name="Clase">
-
-            <label for="createCategoria">Categoría:</label>
-            <input type="text" id="createCategoria" name="Categoria">
-
-            <button type="submit">Crear Taxi</button>
-        </form>
+        <div id="messageArea"></div>
     </div>
 
-    <hr>
+    <!-- Modal para crear taxi -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Crear Nuevo Taxi</h2>
+                <span class="close-modal" data-modal="createModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="createForm">
+                    <div class="form-group">
+                        <label for="createMatricula">Matrícula:</label>
+                        <input type="text" id="createMatricula" name="Matricula" required>
+                    </div>
 
-    <div class="operation-section update-section">
-        <h2>Actualizar Taxi</h2>
-        <form id="updateForm">
-            <label for="updateId">ID del Taxi (_id):</label>
-            <input type="text" id="updateId" name="id" required readonly> <br>
-            <label for="updateMatricula">Nueva Matrícula:</label>
-            <input type="text" id="updateMatricula" name="Matricula">
+                    <div class="form-group">
+                        <label for="createMarca">Marca:</label>
+                        <input type="text" id="createMarca" name="Marca" required>
+                    </div>
 
-            <label for="updateMarca">Nueva Marca:</label>
-            <input type="text" id="updateMarca" name="Marca">
+                    <div class="form-group">
+                        <label for="createClase">Clase:</label>
+                        <input type="text" id="createClase" name="Clase">
+                    </div>
 
-            <label for="updateClase">Nueva Clase:</label>
-            <input type="text" id="updateClase" name="Clase">
+                    <div class="form-group">
+                        <label for="createCategoria">Categoría:</label>
+                        <input type="text" id="createCategoria" name="Categoria">
+                    </div>
 
-            <label for="updateCategoria">Nueva Categoría:</label>
-            <input type="text" id="updateCategoria" name="Categoria">
-
-            <button type="submit">Actualizar Taxi</button>
-            <button type="button" id="clearUpdateFormBtn">Limpiar Formulario</button>
-        </form>
+                    <div class="form-actions">
+                        <button type="submit">Crear Taxi</button>
+                        <button type="button" class="cancel-btn close-modal" data-modal="createModal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <hr>
+    <!-- Modal para editar taxi -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Taxi</h2>
+                <span class="close-modal" data-modal="editModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="updateId" name="id">
+                    
+                    <div class="form-group">
+                        <label for="updateMatricula">Matrícula:</label>
+                        <input type="text" id="updateMatricula" name="Matricula">
+                    </div>
 
-    <div class="operation-section delete-section">
-        <h2>Eliminar Taxi</h2>
-        <form id="deleteForm">
-            <label for="deleteId">ID del Taxi (_id):</label>
-            <input type="text" id="deleteId" name="id" required readonly> <button type="submit">Eliminar Taxi</button>
-             <button type="button" id="clearDeleteFormBtn">Limpiar Formulario</button>
-        </form>
+                    <div class="form-group">
+                        <label for="updateMarca">Marca:</label>
+                        <input type="text" id="updateMarca" name="Marca">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="updateClase">Clase:</label>
+                        <input type="text" id="updateClase" name="Clase">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="updateCategoria">Categoría:</label>
+                        <input type="text" id="updateCategoria" name="Categoria">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit">Actualizar Taxi</button>
+                        <button type="button" class="cancel-btn close-modal" data-modal="editModal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <hr>
-
-    <h2>Listado de Taxis</h2>
-    <div id="paginationControls" class="pagination-controls">
-        <button id="prevPageBtn" disabled>Anterior</button>
-        <span id="pageInfo">Página 1 de 1</span>
-        <button id="nextPageBtn" disabled>Siguiente</button>
-        <span id="totalCountInfo">Total: 0</span>
+    <!-- Modal de confirmación para eliminar -->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content delete-confirm">
+            <div class="modal-header">
+                <h2>Confirmar Eliminación</h2>
+                <span class="close-modal" data-modal="deleteConfirmModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este taxi?</p>
+                <p id="deleteItemDetails"></p>
+                
+                <form id="deleteForm">
+                    <input type="hidden" id="deleteId" name="id">
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="danger-btn">Eliminar</button>
+                        <button type="button" class="cancel-btn close-modal" data-modal="deleteConfirmModal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div id="taxiList">
-        <p>Cargando datos iniciales...</p>
-    </div>
 
-    <div id="messageArea"></div>
+    <!-- Overlay para el fondo oscurecido detrás de los modales -->
+    <div id="modalOverlay"></div>
 
     <script>
         // Referencias a elementos del DOM
         const createForm = document.getElementById('createForm');
         const updateForm = document.getElementById('updateForm');
         const deleteForm = document.getElementById('deleteForm');
-        const clearUpdateFormBtn = document.getElementById('clearUpdateFormBtn');
-        const clearDeleteFormBtn = document.getElementById('clearDeleteFormBtn');
         const taxiListDiv = document.getElementById('taxiList');
         const messageArea = document.getElementById('messageArea');
         const prevPageBtn = document.getElementById('prevPageBtn');
         const nextPageBtn = document.getElementById('nextPageBtn');
         const pageInfoSpan = document.getElementById('pageInfo');
         const totalCountInfoSpan = document.getElementById('totalCountInfo');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        // Botones para abrir modales
+        const openCreateModalBtn = document.getElementById('openCreateModalBtn');
 
         // --- Estado ---
         let currentPage = 1;
         const itemsPerPage = 10; // Coincide con DEFAULT_PAGE_LIMIT en app.py
 
+        // --- Funciones para manejar modales ---
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            modalOverlay.classList.add('active');
+            document.body.classList.add('modal-open');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            modalOverlay.classList.remove('active');
+            document.body.classList.remove('modal-open');
+            
+            // Resetear formularios al cerrar modal
+            if (modalId === 'createModal') {
+                createForm.reset();
+            } else if (modalId === 'editModal') {
+                updateForm.reset();
+            } else if (modalId === 'deleteConfirmModal') {
+                deleteForm.reset();
+            }
+        }
+
+        // Cerrar modal al hacer clic en el overlay
+        modalOverlay.addEventListener('click', function() {
+            document.querySelectorAll('.modal.active').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            modalOverlay.classList.remove('active');
+            document.body.classList.remove('modal-open');
+        });
+
+        // Configurar todos los botones para cerrar modales
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modalId = this.getAttribute('data-modal');
+                closeModal(modalId);
+            });
+        });
+
+        // Abrir modal de crear
+        openCreateModalBtn.addEventListener('click', () => {
+            openModal('createModal');
+        });
+
         // --- Funciones Auxiliares ---
         function displayMessage(message, isError = false) {
             messageArea.textContent = message;
             messageArea.className = isError ? 'message error' : 'message success';
+            
+            // Hacer scroll al mensaje
+            messageArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
             setTimeout(() => {
                 messageArea.textContent = '';
                 messageArea.className = 'message';
@@ -110,14 +217,13 @@
 
         function renderTaxiList(taxis) {
             if (!taxis || taxis.length === 0) {
-                taxiListDiv.innerHTML = '<p>No se encontraron taxis para esta página.</p>';
+                taxiListDiv.innerHTML = '<p class="no-data">No se encontraron taxis para esta página.</p>';
                 return;
             }
             let tableHTML = `
                 <table>
                     <thead>
                         <tr>
-                            <th>ID (_id)</th>
                             <th>Matrícula</th>
                             <th>Marca</th>
                             <th>Clase</th>
@@ -128,17 +234,28 @@
                     <tbody>
             `;
             taxis.forEach(taxi => {
-                // Usamos || '' para evitar mostrar 'null' o 'undefined' si un campo falta
+                // Escapar valores para evitar problemas con comillas en los atributos HTML
+                const taxiId = taxi._id;
+                const matricula = (taxi.Matricula || '').replace(/"/g, '&quot;');
+                const marca = (taxi.Marca || '').replace(/"/g, '&quot;');
+                const clase = (taxi.Clase || '').replace(/"/g, '&quot;');
+                const categoria = (taxi.Categoria || '').replace(/"/g, '&quot;');
+                
                 tableHTML += `
-                    <tr>
-                        <td>${taxi._id}</td>
-                        <td>${taxi.Matricula || ''}</td>
-                        <td>${taxi.Marca || ''}</td>
-                        <td>${taxi.Clase || ''}</td>
-                        <td>${taxi.Categoria || ''}</td>
-                        <td>
-                            <button class="edit-btn" onclick="populateUpdateForm('${taxi._id}', '${taxi.Matricula || ''}', '${taxi.Marca || ''}', '${taxi.Clase || ''}', '${taxi.Categoria || ''}')">Editar</button>
-                            <button class="delete-btn" onclick="populateDeleteForm('${taxi._id}')">Eliminar</button>
+                    <tr data-id="${taxiId}">
+                        <td>${matricula}</td>
+                        <td>${marca}</td>
+                        <td>${clase}</td>
+                        <td>${categoria}</td>
+                        <td class="actions-cell">
+                            <button class="action-btn edit-btn" 
+                                onclick="openEditModal('${taxiId}', '${matricula}', '${marca}', '${clase}', '${categoria}')">
+                                Editar
+                            </button>
+                            <button class="action-btn delete-btn" 
+                                onclick="openDeleteConfirmModal('${taxiId}', '${matricula}', '${marca}')">
+                                Eliminar
+                            </button>
                         </td>
                     </tr>
                 `;
@@ -158,26 +275,33 @@
             nextPageBtn.disabled = !pagination.hasNextPage;
 
             const controlsDiv = document.getElementById('paginationControls');
-            controlsDiv.style.display = pagination.totalPages > 1 ? 'block' : 'none';
+            controlsDiv.style.display = pagination.totalPages > 1 ? 'flex' : 'none';
         }
 
-        function populateUpdateForm(id, matricula, marca, clase, categoria) {
+        // Para abrir modal de edición con datos prellenados
+        function openEditModal(id, matricula, marca, clase, categoria) {
             document.getElementById('updateId').value = id;
             document.getElementById('updateMatricula').value = matricula;
             document.getElementById('updateMarca').value = marca;
             document.getElementById('updateClase').value = clase;
             document.getElementById('updateCategoria').value = categoria;
-            updateForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            openModal('editModal');
         }
 
-         function populateDeleteForm(id) {
+        // Para abrir modal de confirmación de eliminación
+        function openDeleteConfirmModal(id, matricula, marca) {
             document.getElementById('deleteId').value = id;
-            deleteForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('deleteItemDetails').textContent = `Matrícula: ${matricula} - Marca: ${marca}`;
+            openModal('deleteConfirmModal');
         }
+
+        // Exponer funciones para ser llamadas desde los botones en el HTML
+        window.openEditModal = openEditModal;
+        window.openDeleteConfirmModal = openDeleteConfirmModal;
 
         // Función para obtener y mostrar taxis de una página específica
         async function fetchTaxis(page = 1) {
-            taxiListDiv.innerHTML = '<p>Cargando...</p>';
+            taxiListDiv.innerHTML = '<p class="loading">Cargando...</p>';
             try {
                 // Los parámetros van en la URL para GET
                 const response = await fetch(`/api/taxis?page=${page}&limit=${itemsPerPage}`);
@@ -192,7 +316,7 @@
                 updatePaginationControls(result.pagination);
             } catch (error) {
                 console.error('Error al listar taxis:', error);
-                taxiListDiv.innerHTML = `<p>Error al cargar taxis: ${error.message}</p>`;
+                taxiListDiv.innerHTML = `<p class="error">Error al cargar taxis: ${error.message}</p>`;
                 displayMessage(`Error al listar taxis: ${error.message}`, true);
                 updatePaginationControls(null); // Ocultar/resetear controles en caso de error
             }
@@ -208,7 +332,6 @@
         });
 
         nextPageBtn.addEventListener('click', () => {
-            // No necesitamos verificar totalPages aquí, el botón estará desactivado
             fetchTaxis(currentPage + 1);
         });
 
@@ -219,7 +342,7 @@
             // Convertir FormData a objeto JSON
             const taxiData = Object.fromEntries(formData.entries());
 
-            // Validación simple en frontend (opcional, la principal está en backend)
+            // Validación simple en frontend
             if (!taxiData.Matricula || !taxiData.Marca) {
                 displayMessage('Matrícula y Marca son campos obligatorios.', true);
                 return;
@@ -234,7 +357,8 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || `Error HTTP: ${response.status}`);
 
-                displayMessage(`Taxi creado con éxito (ID: ${result._id})`);
+                displayMessage(`Taxi creado con éxito`);
+                closeModal('createModal');
                 createForm.reset();
                 fetchTaxis(1); // Refrescar volviendo a la página 1
             } catch (error) {
@@ -249,15 +373,23 @@
             const formData = new FormData(updateForm);
             const id = formData.get('id');
             const updateData = {};
-            // Incluir solo campos con valor y que no sean el ID
+            
+            // Incluir solo campos con valor
             for (let [key, value] of formData.entries()) {
                 if (key !== 'id' && value) {
                     updateData[key] = value;
                 }
             }
 
-            if (!id) { displayMessage('Selecciona un taxi de la lista para editar.', true); return; }
-            if (Object.keys(updateData).length === 0) { displayMessage('Introduce al menos un campo para actualizar.', true); return; }
+            if (!id) { 
+                displayMessage('ID de taxi no válido.', true); 
+                return; 
+            }
+            
+            if (Object.keys(updateData).length === 0) { 
+                displayMessage('Introduce al menos un campo para actualizar.', true); 
+                return; 
+            }
 
             try {
                 const response = await fetch(`/api/taxis/${id}`, {
@@ -268,7 +400,8 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || `Error HTTP: ${response.status}`);
 
-                displayMessage(`Taxi ${id} actualizado con éxito.`);
+                displayMessage(`Taxi actualizado con éxito.`);
+                closeModal('editModal');
                 updateForm.reset();
                 fetchTaxis(currentPage); // Refrescar la página actual
             } catch (error) {
@@ -277,30 +410,24 @@
             }
         });
 
-        // Limpiar Formulario de Actualización
-        clearUpdateFormBtn.addEventListener('click', () => {
-            updateForm.reset();
-        });
-
         // Eliminar Taxi
         deleteForm.addEventListener('submit', async (event) => {
             event.preventDefault();
-            const formData = new FormData(deleteForm);
-            const id = formData.get('id');
+            const id = document.getElementById('deleteId').value;
 
-            if (!id) { displayMessage('Selecciona un taxi de la lista para eliminar.', true); return; }
-            if (!confirm(`¿Estás seguro de que quieres eliminar el taxi con ID: ${id}?`)) return;
+            if (!id) { 
+                displayMessage('ID de taxi no válido.', true); 
+                return; 
+            }
 
             try {
                 const response = await fetch(`/api/taxis/${id}`, { method: 'DELETE' });
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || `Error HTTP: ${response.status}`);
 
-                displayMessage(`Taxi ${result.id} eliminado con éxito.`);
+                displayMessage(`Taxi eliminado con éxito.`);
+                closeModal('deleteConfirmModal');
                 deleteForm.reset();
-                // Podríamos intentar recargar la página actual,
-                // o ir a la página 1 si la actual queda vacía.
-                // Por simplicidad, recargamos la actual.
                 fetchTaxis(currentPage);
             } catch (error) {
                 console.error('Error al eliminar taxi:', error);
@@ -308,17 +435,10 @@
             }
         });
 
-         // Limpiar Formulario de Eliminación
-        clearDeleteFormBtn.addEventListener('click', () => {
-            deleteForm.reset();
-        });
-
         // --- Carga Inicial ---
         document.addEventListener('DOMContentLoaded', () => {
             fetchTaxis(1); // Carga la primera página al inicio
         });
-
     </script>
 </body>
 </html>
-
